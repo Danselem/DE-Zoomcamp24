@@ -1,5 +1,9 @@
 # DE-Zoomcamp24
 
+### Docker
+`docker network create pg-network`
+
+`docker volume create --name dtc_postgres_volume_local -d local`
 ### Postgres
 ```
 docker run -it \
