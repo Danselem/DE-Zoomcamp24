@@ -27,3 +27,38 @@ docker run -it \
   --name pgadmin \
   dpage/pgadmin4
 ```
+
+### How to view docker images
+`docker images`
+
+### How to delete 
+`docker rmi -f $(docker images -q)`
+
+### How to stop containers
+` docker stop $(docker ps -a -q)`
+
+### How to delete containers
+`docker rm $(docker ps -a -q)`
+
+### On pgAdmin
+Register, General, 
+Name: MyServer
+Connection
+Host name: pg-database
+port: 5432
+maintenance database: postgres
+username: root
+password: root
+
+
+### Data 
+`https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz`
+`gunzip yellow_tripdata_2021-01.csv.gz`
+
+
+### Restarting the Docker container
+`docker run -it -d postgres:13`
+`docker run -it -d dpage/pgadmin4:latest`
+
+
+
