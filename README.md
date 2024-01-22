@@ -56,9 +56,11 @@ password: root
 `gunzip yellow_tripdata_2021-01.csv.gz`
 
 
-### Restarting the Docker container
-`docker run -it -d postgres:13`
-`docker run -it -d dpage/pgadmin4:latest`
+### To view available container
+`docker ps -a`
+
+### To start a container
+`docker start <CONTAINER ID>`
 
 
 
