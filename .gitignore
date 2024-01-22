@@ -39,3 +39,5 @@ override.tf.json
 terraform.rc
 
 *.json
+
+google-cloud-sdk/
