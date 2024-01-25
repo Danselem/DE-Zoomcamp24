@@ -86,3 +86,18 @@ sudo gpasswd -a $USER docker
 [text](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04)
 
 [text](https://docs.docker.com/desktop/install/ubuntu/)
+
+[text](https://wiki.crowncloud.net/?How_to_Install_and_use_Docker_Compose_on_Ubuntu_22_04)
+
+
+### GCP VM
+
+ssh de-zoomcamp
+
+
+sftp de-zoomcamp
+
+export GOOGLE_APPLICATION_CREDENTIALS='/home/daniel/.ssh/gcp-sv.json'
+
+## Aunthentication
+`gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS`

@@ -98,3 +98,38 @@ docker run -it \
   --network=pg-network \
   --name pg-database \
   postgres:13
+
+
+
+### docker compose
+`docker compose up -d`
+
+### To run Dockerfile
+
+#### Build the image
+
+```bash
+docker build -t taxi_ingest:v001 .
+```
+
+```bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+
+`docker network ls`
+
+docker run -it \
+  --network=2_docker_sql_default \
+  taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pgdatabase \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
+
+
+
+### pgcli
+sudo apt install pgcli
+`pgcli -h localhost -U root -d ny_taxi`
