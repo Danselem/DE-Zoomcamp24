@@ -260,3 +260,163 @@ FROM
     ON t."DOLocationID" = zdo."LocationID"
 LIMIT 100
 ```
+
+```
+-- Groupby
+SELECT
+  tpep_pickup_datetime, 
+  tpep_dropoff_datetime,
+  DATE_TRUNC('DAY', tpep_dropoff_datetime),
+  total_amount,
+  "PULocationID",
+  "DOLocationID"
+FROM
+  yellow_taxi_trips t JOIN zones zpu
+    ON t."PULocationID" = zpu."LocationID"
+  LEFT JOIN zones zdo
+    ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100
+```
+
+```
+-- Using CAST
+SELECT
+  tpep_pickup_datetime, 
+  tpep_dropoff_datetime,
+  CAST(tpep_dropoff_datetime AS DATE),
+  total_amount,
+  "PULocationID",
+  "DOLocationID"
+FROM
+  yellow_taxi_trips t JOIN zones zpu
+    ON t."PULocationID" = zpu."LocationID"
+  LEFT JOIN zones zdo
+    ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100
+```
+
+```
+-- Group by day
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE);
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY "day";
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY "day" ASC;
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1) AS "count"
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY "count" ASC;
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1) AS "count"
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY "count" DESC;
+```
+
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1) AS "count",
+  MAX(total_amount),
+  MAX(passenger_count)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY "count" DESC;
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  "DOLocationID",
+  COUNT(1) AS "count",
+  MAX(total_amount),
+  MAX(passenger_count)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  1, 2
+ORDER BY "count" DESC;
+```
+
+```
+SELECT
+  CAST(tpep_dropoff_datetime AS DATE) AS "day",
+  "DOLocationID",
+  COUNT(1) AS "count",
+  MAX(total_amount),
+  MAX(passenger_count)
+FROM
+  yellow_taxi_trips t
+GROUP BY
+  1, 2
+ORDER BY "day" ASC, "DOLocationID" ASC;
+```
+
+SELECT
+  CAST(lpep_dropoff_datetime AS DATE) AS "day",
+  COUNT(1) AS "count"
+FROM
+  green_taxi_trips t
+GROUP BY
+  CAST(lpep_dropoff_datetime AS DATE)
+ORDER BY "count" DESC;
+
+### Viewing Table schemas:
+
+```bash
+select table_schema,
+       table_name,
+       ordinal_position as position,
+       column_name,
+       data_type,
+       case when character_maximum_length is not null
+            then character_maximum_length
+            else numeric_precision end as max_length,
+       is_nullable,
+       column_default as default_value
+from information_schema.columns
+where table_schema not in ('information_schema', 'pg_catalog')
+order by table_schema, 
+         table_name,
+         ordinal_position;
+```
