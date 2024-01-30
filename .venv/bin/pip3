@@ -1,4 +1,4 @@
-#!/workspaces/DE-Zoomcamp24/.venv/bin/python3.11
+#!/workspaces/DE-Zoomcamp24/.venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

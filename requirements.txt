@@ -5,3 +5,9 @@ sqlalchemy
 psycopg2-binary
 notebook
 pgcli
+deficrawler
+DeFiLlama-Curl
+plotly
+palettable
+bokeh
+prophet
