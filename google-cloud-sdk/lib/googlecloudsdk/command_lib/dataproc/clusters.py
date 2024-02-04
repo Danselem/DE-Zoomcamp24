@@ -432,17 +432,33 @@ If you want to enable all scopes use the 'cloud-platform' scope.
   else:
     _AddDiskArgs(parser, include_driver_pool_args)
 
+  ip_address_parser = parser.add_mutually_exclusive_group()
+
   # --no-address is an exception to the no negative-flag style guildline to be
   # consistent with gcloud compute instances create --no-address
-  parser.add_argument(
+  ip_address_parser.add_argument(
       '--no-address',
       action='store_true',
       help="""\
       If provided, the instances in the cluster will not be assigned external
       IP addresses.
 
-      If omitted the instances in the cluster will each be assigned an
-      ephemeral external IP address.
+      If omitted, then the Dataproc service will apply a default policy to determine if each instance in the cluster gets an external IP address or not.
+
+      Note: Dataproc VMs need access to the Dataproc API. This can be achieved
+      without external IP addresses using Private Google Access
+      (https://cloud.google.com/compute/docs/private-google-access).
+      """,
+  )
+
+  ip_address_parser.add_argument(
+      '--public-ip-address',
+      action='store_true',
+      help="""\
+      If provided, cluster instances are assigned external IP addresses.
+
+      If omitted, the Dataproc service applies a default policy to determine
+      whether or not each instance in the cluster gets an external IP address.
 
       Note: Dataproc VMs need access to the Dataproc API. This can be achieved
       without external IP addresses using Private Google Access
@@ -577,6 +593,15 @@ If you want to enable all scopes use the 'cloud-platform' scope.
       external metastore in the format:
       "projects/{project-id}/locations/{region}/services/{service-name}".
       """,
+  )
+
+  parser.add_argument(
+      '--enable-node-groups',
+      hidden=True,
+      help="""\
+      Create cluster nodes using Dataproc NodeGroups. All the required VMs will be created using GCE MIG.
+      """,
+      type=bool,
   )
 
   autoscaling_group = parser.add_argument_group()
@@ -1087,6 +1112,11 @@ def GetClusterConfig(
     # this property will not be set
     args.properties[constants.ALLOW_ZERO_WORKERS_PROPERTY] = 'true'
 
+  if args.enable_node_groups is not None:
+    args.properties[constants.ENABLE_NODE_GROUPS_PROPERTY] = str(
+        args.enable_node_groups
+    ).lower()
+
   if args.properties:
     software_config.properties = encoding.DictToAdditionalPropertyMessage(
         args.properties,
@@ -1108,7 +1138,6 @@ def GetClusterConfig(
   gce_cluster_config = dataproc.messages.GceClusterConfig(
       networkUri=network_ref and network_ref.SelfLink(),
       subnetworkUri=subnetwork_ref and subnetwork_ref.SelfLink(),
-      internalIpOnly=args.no_address,
       privateIpv6GoogleAccess=_GetPrivateIpv6GoogleAccess(
           dataproc, args.private_ipv6_google_access_type
       ),
@@ -1116,6 +1145,11 @@ def GetClusterConfig(
       serviceAccountScopes=expanded_scopes,
       zoneUri=properties.VALUES.compute.zone.GetOrFail(),
   )
+
+  if args.public_ip_address:
+    gce_cluster_config.internalIpOnly = not args.public_ip_address
+  if args.no_address:
+    gce_cluster_config.internalIpOnly = args.no_address
 
   reservation_affinity = GetReservationAffinity(args, dataproc)
   gce_cluster_config.reservationAffinity = reservation_affinity

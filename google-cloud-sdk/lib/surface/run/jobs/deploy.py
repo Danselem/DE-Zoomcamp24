@@ -197,7 +197,9 @@ class Deploy(base.Command):
           )
       )
 
-    changes = flags.GetJobConfigurationChanges(args)
+    changes = flags.GetJobConfigurationChanges(
+        args,
+        release_track=self.ReleaseTrack())
     changes.append(
         config_changes.SetLaunchStageAnnotationChange(self.ReleaseTrack())
     )
@@ -236,6 +238,7 @@ class Deploy(base.Command):
         job = operations.DeployJob(
             job_ref,
             changes,
+            self.ReleaseTrack(),
             tracker,
             asyn=(args.async_ and not execute_now),
             build_image=image,

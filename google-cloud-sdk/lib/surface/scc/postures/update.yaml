@@ -1,4 +1,4 @@
-- release_tracks: [ALPHA]
+- release_tracks: [ALPHA, GA]
   help_text:
     brief: Update the given Cloud Security Command Center (SCC) posture.
     description: |
@@ -61,12 +61,14 @@
     collection: securityposture.organizations.locations.postures
     api_version: v1alpha
     method: patch
+    GA:
+      api_version: v1
 
   arguments:
     resource:
       spec: !REF googlecloudsdk.command_lib.scc.resources:posture
       help_text: |
-          Arguments and flags that specify the Posture instance to update.
+          Arguments and flags that specify the Posture instance to be updated.
 
     params:
     - arg_name: posture-from-file
@@ -93,3 +95,6 @@
 
   async:
     collection: securityposture.organizations.locations.operations
+
+  output:
+    format: yaml

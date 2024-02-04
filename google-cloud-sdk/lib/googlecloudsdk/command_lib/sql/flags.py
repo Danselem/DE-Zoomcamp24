@@ -833,8 +833,11 @@ def AddSimulateMaintenanceEvent(parser):
       '--simulate-maintenance-event',
       action='store_true',
       required=False,
-      hidden=True,
-      help='Simulate a maintenance event without changing the version.',
+      help=(
+          'Simulate a maintenance event without changing the version. Only'
+          ' applicable to instances that support near-zero downtime planned'
+          ' maintenance.'
+      ),
   )
 
 
@@ -2187,4 +2190,18 @@ def AddSqlServerSsrs(parser):
           ' setup. Default lease duration is 5 hours if this flag is not'
           ' specified. Only available for SQL Server instances.'
       ),
+  )
+
+
+def AddEnableGoogleMLIntegration(parser):
+  """Adds --enable-google-ml-integration flag."""
+  parser.add_argument(
+      '--enable-google-ml-integration',
+      required=False,
+      hidden=True,
+      help=(
+          'Enable Vertex AI integration for Google Cloud SQL. '
+          'Currently, only PostgreSQL is supported.'
+      ),
+      action=arg_parsers.StoreTrueFalseAction,
   )

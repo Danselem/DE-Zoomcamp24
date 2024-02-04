@@ -1,11 +1,11 @@
-FROM python:3.10.1-slim
+FROM python:3.9.1
 
-RUN apt-get install wget
+# RUN apt-get update && apt-get install wget
 
-RUN pip install pandas sqlalchemy deficrawler DeFiLlama-Curl psycopg2-binary
+RUN pip install pandas pyarrow sqlalchemy deficrawler psycopg2-binary
 
 WORKDIR /app
 
-COPY ingest_data.py ingest_data.py 
+COPY defi-ingest.py defi-ingest.py 
 
-ENTRYPOINT [ "python", "ingest_data.py" ]
+ENTRYPOINT [ "python", "defi-ingest.py" ]

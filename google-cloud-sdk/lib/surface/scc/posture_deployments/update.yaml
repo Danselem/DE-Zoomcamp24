@@ -1,4 +1,5 @@
-- release_tracks: [ALPHA]
+- release_tracks: [ALPHA, GA]
+  command_type: GENERIC
   help_text:
     brief: Update the given Cloud Security Command Center (SCC) posture deployment.
     description: |
@@ -6,6 +7,7 @@
 
       Fields specified in update-mask flag are updated. Updatable fields are description and posture_name with posture_revision-id.
       The target_resource for a posture deployment cannot be updated. The posture deployment to be updated should be in ACTIVE State.
+      An empty or "*" update-mask implies that posture-id and posture-revision-id are to be updated.
       If posture details of posture deployment need to be updated, then the desired posture needs to be in ACTIVE state.
       LRO operation ID is returned as the response of the command.
 
@@ -16,21 +18,23 @@
       Update posture deployment named `foo-posture-deployment` with the posture named `foo-posture` and revision_id `abcdefgh` in the organization `organizations/123/locations/global`:
         $ {command} organizations/123/locations/global/postureDeployments/foo-posture-deployment --update-mask=posture_id,posture_revision-id --posture-id=foo-posture --posture-revision-id=abcdefgh
 
+       Update posture deployment named `foo-posture-deployment` with the posture named `foo-posture` and revision_id `abcdefgh` in the organization `organizations/123/locations/global`:
+        $ {command} organizations/123/locations/global/postureDeployments/foo-posture-deployment  --posture-id=foo-posture --posture-revision-id=abcdefgh
+
   request:
     collection: securityposture.organizations.locations.postureDeployments
-    disable_resource_check: true
     api_version: v1alpha
     method: patch
+    GA:
+      api_version: v1
 
   arguments:
-    params:
-    - arg_name: posture_deployment_name
-      api_field: name
-      is_positional: true
-      required: true
+    resource:
+      spec: !REF googlecloudsdk.command_lib.scc.resources:posture_deployment
       help_text: |
-        Relative resource name of the posture deployment, like `organizations/<organizationID>/locations/<location>/postureDeployments/<postureDeploymentID>`.
+          The posture deployment to update. For example organizations/<organizationID>/locations/<location>/postureDeployments/<postureDeploymentID>.
 
+    params:
     - group:
         params:
         - arg_name: posture-id
@@ -62,3 +66,7 @@
 
   async:
     collection: securityposture.organizations.locations.operations
+    extract_resource_result: false
+
+  output:
+    format: yaml

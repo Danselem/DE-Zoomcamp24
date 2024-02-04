@@ -1146,6 +1146,8 @@ class _SectionApiEndpointOverrides(_Section):
         'artifactregistry', command='gcloud artifacts')
     self.assuredworkloads = self._Add(
         'assuredworkloads', command='gcloud assured')
+    self.auditmanager = self._Add(
+        'auditmanager', command='gcloud audit-manager')
     self.authztoolkit = self._Add(
         'authztoolkit', command='gcloud authz-toolkit', hidden=True)
     self.backupdr = self._Add(
@@ -3119,6 +3121,10 @@ class _SectionRunApps(_Section):
         'usable in the API for those who are not allowlisted.',
         default=False,
         hidden=True)
+    self.deployment_service_account = self._Add(
+        'deployment_service_account',
+        help_text='Service account to use when deploying integrations.',
+    )
 
 
 class _SectionScc(_Section):
@@ -3414,7 +3420,8 @@ class _SectionStorage(_Section):
     self.sliced_object_download_max_components = self._Add(
         'sliced_object_download_max_components',
         help_text='Specifies the maximum number of slices to be used when'
-        ' performing a sliced object download. Set None for no limit.')
+        ' performing a sliced object download. Set None for automatic'
+        ' optimization based on system resources.')
 
     self.sliced_object_download_threshold = self._Add(
         'sliced_object_download_threshold',

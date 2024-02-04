@@ -27,7 +27,6 @@ from googlecloudsdk.command_lib.run import config_changes
 from googlecloudsdk.command_lib.run import connection_context
 from googlecloudsdk.command_lib.run import container_parser
 from googlecloudsdk.command_lib.run import flags
-from googlecloudsdk.command_lib.run import functions
 from googlecloudsdk.command_lib.run import messages_util
 from googlecloudsdk.command_lib.run import platforms
 from googlecloudsdk.command_lib.run import pretty_print
@@ -35,6 +34,7 @@ from googlecloudsdk.command_lib.run import resource_args
 from googlecloudsdk.command_lib.run import resource_change_validators
 from googlecloudsdk.command_lib.run import serverless_operations
 from googlecloudsdk.command_lib.run import stages
+from googlecloudsdk.command_lib.run.sourcedeploys import builders
 from googlecloudsdk.command_lib.util.concepts import concept_parsers
 from googlecloudsdk.command_lib.util.concepts import presentation_specs
 from googlecloudsdk.core import properties
@@ -103,6 +103,7 @@ Container Flags
   if release_track == base.ReleaseTrack.ALPHA:
     group.AddArgument(flags.AddCommandAndFunctionFlag())
     group.AddArgument(flags.BaseImageArg())
+    group.AddArgument(flags.GpuFlag())
   else:
     group.AddArgument(flags.CommandFlag())
 
@@ -204,11 +205,6 @@ class Deploy(base.Command):
     """Deploy a container to Cloud Run."""
     platform = flags.GetAndValidatePlatform(
         args, self.ReleaseTrack(), flags.Product.RUN
-    )
-
-    use_wait = (
-        self.ReleaseTrack() != base.ReleaseTrack.GA
-        and platforms.GetPlatform() == platforms.PLATFORM_MANAGED
     )
 
     if flags.FlagIsExplicitlySet(args, 'containers'):
@@ -417,6 +413,7 @@ class Deploy(base.Command):
         service = operations.ReleaseService(
             service_ref,
             changes,
+            self.ReleaseTrack(),
             tracker,
             asyn=args.async_,
             allow_unauthenticated=allow_unauth,
@@ -430,7 +427,6 @@ class Deploy(base.Command):
                 flags.FlagIsExplicitlySet(args, 'revision_suffix')
                 or flags.FlagIsExplicitlySet(args, 'tag')
             ),
-            use_wait=use_wait,
         )
 
       if args.async_:
@@ -468,7 +464,7 @@ def _CreateBuildPack(container, release_track=base.ReleaseTrack.GA):
         pack[0].update(
             {
                 'builder': '{builder}'.format(
-                    builder=functions.FunctionBuilder(
+                    builder=builders.FunctionBuilder(
                         base_image_arg
                     )
                 )
@@ -511,6 +507,7 @@ class AlphaDeploy(BetaDeploy):
     flags.AddServiceMinInstancesFlag(managed_group)
     flags.AddVolumesFlags(managed_group, cls.ReleaseTrack())
     flags.RemoveContainersFlag().AddToParser(managed_group)
+    flags.AddGpuTypeFlag(managed_group)
     flags.SERVICE_MESH_FLAG.AddToParser(managed_group)
     container_args = ContainerArgGroup(cls.ReleaseTrack())
     container_parser.AddContainerFlags(parser, container_args)
