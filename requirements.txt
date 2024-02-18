@@ -12,3 +12,4 @@ palettable
 bokeh
 prophet
 dfllama
+dlt[duckdb]
