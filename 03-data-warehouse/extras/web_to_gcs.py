@@ -14,7 +14,7 @@ Pre-reqs:
 # services = ['fhv','green','yellow']
 init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/'
 # switch out the bucketname
-BUCKET = os.environ.get("GCP_GCS_BUCKET", "dtc-data-lake-bucketname")
+BUCKET = os.environ.get("GCP_GCS_BUCKET", "mage-zoomcamp-dtc-de-412020")
 
 
 def upload_to_gcs(bucket, object_name, local_file):
@@ -51,6 +51,7 @@ def web_to_gcs(year, service):
         # read it back into a parquet file
         df = pd.read_csv(file_name, compression='gzip')
         file_name = file_name.replace('.csv.gz', '.parquet')
+        os.system("rm *.csv")
         df.to_parquet(file_name, engine='pyarrow')
         print(f"Parquet: {file_name}")
 
@@ -59,8 +60,9 @@ def web_to_gcs(year, service):
         print(f"GCS: {service}/{file_name}")
 
 
-web_to_gcs('2019', 'green')
-web_to_gcs('2020', 'green')
+# web_to_gcs('2019', 'green')
+# web_to_gcs('2020', 'green')
 # web_to_gcs('2019', 'yellow')
 # web_to_gcs('2020', 'yellow')
-
+web_to_gcs('2019', 'fhv')
+web_to_gcs('2020', 'fhv')

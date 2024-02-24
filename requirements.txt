@@ -13,3 +13,5 @@ bokeh
 prophet
 dfllama
 dlt[duckdb]
+pyarrow
+google-cloud-storage
