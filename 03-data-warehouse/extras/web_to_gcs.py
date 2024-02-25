@@ -49,7 +49,7 @@ def web_to_gcs(year, service):
         print(f"Local: {file_name}")
 
         # read it back into a parquet file
-        df = pd.read_csv(file_name, compression='gzip')
+        df = pd.read_csv(file_name, compression='gzip', low_memory=False, encoding='latin1')
         file_name = file_name.replace('.csv.gz', '.parquet')
         os.system("rm *.csv")
         df.to_parquet(file_name, engine='pyarrow')
