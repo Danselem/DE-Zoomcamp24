@@ -124,7 +124,7 @@ def web_to_gcs(year, service):
             # load green data
             df = pd.read_csv(file_name, compression='gzip', low_memory=False, encoding='latin1')
             
-            columns_to_snake_case(df)         
+            columns_to_snake_case(df)     
             
             df = df.astype({'vendor_id':'Int64','passenger_count':'float', 'pulocation_id': 'Int64',
                             'dolocation_id': 'Int64', 'trip_distance': 'float',
@@ -132,7 +132,8 @@ def web_to_gcs(year, service):
                             'payment_type': 'Int64', 'fare_amount': 'float',
                             'extra': 'float', 'mta_tax': 'float', 'tip_amount': 'float', 
                             'tolls_amount': 'float', 'improvement_surcharge': 'float', 
-                            'total_amount': 'float', 'congestion_surcharge': 'float'})
+                            'total_amount': 'float', 'congestion_surcharge': 'float',
+                            'ehail_fee': 'float', 'trip_type': 'float'})
             
             df["lpep_pickup_datetime"] = pd.to_datetime(df["lpep_pickup_datetime"])
             df["lpep_dropoff_datetime"] = pd.to_datetime(df["lpep_dropoff_datetime"])
