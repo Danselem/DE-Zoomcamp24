@@ -21,6 +21,10 @@ export PYTHONPATH="${SPARK_HOME}/python/lib/py4j-0.10.9.3-src.zip:$PYTHONPATH"
 ```
 
 
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook'
+
+
 Now you can run Jupyter or IPython to test if things work. Go to some other directory, e.g. `~/tmp`.
 
 Download a CSV file that we'll use for testing:

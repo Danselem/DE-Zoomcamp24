@@ -42,3 +42,9 @@ terraform.rc
 *.json
 
 google-cloud-sdk/
+
+05-batch/code/fhvhv_tripdata_2021-01.csv
+
+05-batch/fhvhv/
+
+05-batch/code/data/
