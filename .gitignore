@@ -47,4 +47,10 @@ google-cloud-sdk/
 
 05-batch/fhvhv/
 
-05-batch/code/data/
+05-batch/data/*
+
+05-batch/code/data/*
+
+05-batch/setup/*
+
+05-batch/tmp/*
