@@ -6,12 +6,19 @@ Uploading data to GCS:
 
 ```bash
 gsutil -m cp -r pq/ gs://dtc_data_lake_de-zoomcamp-nytaxi/pq
+
+gsutil -m cp -r pq/ gs://mage-zoomcamp-dtc-de-412020/pq
 ```
 
 Download the jar for connecting to GCS to any location (e.g. the `lib` folder):
+`https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage`
+`mkdir lib
+cd lib
+
 
 ```bash
 gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar
+gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hadoop3-2.2.5.jar
 ```
 
 See the notebook with configuration in [09_spark_gcs.ipynb](09_spark_gcs.ipynb)
@@ -24,13 +31,14 @@ See the notebook with configuration in [09_spark_gcs.ipynb](09_spark_gcs.ipynb)
 Creating a stand-alone cluster ([docs](https://spark.apache.org/docs/latest/spark-standalone.html)):
 
 ```bash
+cd /home/daniel/spark/spark-3.3.2-bin-hadoop3
 ./sbin/start-master.sh
 ```
 
 Creating a worker:
 
 ```bash
-URL="spark://de-zoomcamp.europe-west1-b.c.de-zoomcamp-nytaxi.internal:7077"
+URL="spark://de-zoomcamp.us-central1-a.c.dtc-de-412020.internal:7077"
 ./sbin/start-slave.sh ${URL}
 
 # for newer versions of spark use that:
